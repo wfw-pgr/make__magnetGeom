@@ -8,8 +8,40 @@ import gmsh
 
 def make__magnet( dimtags={} ):
 
-    inpFile = "dat/magnet.conf"
+    # ------------------------------------------------- #
+    # --- [1] load constants                        --- #
+    # ------------------------------------------------- #
+    import nkUtilities.load__constants as lcn
+    cnsFile = "dat/unified_parts.conf"
+    const   = lcn.load__constants( inpFile=cnsFile )
+
+    # ------------------------------------------------- #
+    # --- [2] make variables list                   --- #
+    # ------------------------------------------------- #
+    keys    = [ "geometry.r_pole", \
+                "geometry.z_gap" , \
+                "geometry.z_pole", \
+                "geometry.w_coil", \
+                "geometry.w_iair1", \
+                "geometry.w_iair2", \
+                "geometry.h_coil", \
+                "geometry.h_iair1", \
+                "geometry.h_iair2", \
+                "geometry.w_yoke", \
+                "geometry.h_yoke", \
+                "geometry.w_cut", \
+                "geometry.h_cut", \
+                "geometry.w_oair", \
+                "geometry.h_oair", \
+    ]
+    outFile = "dat/variables.conf"
+    import nkUtilities.write__variableDefinition as wvd
+    ret     = wvd.write__variableDefinition( table=const, keys=keys, outFile=outFile )
     
+    # ------------------------------------------------- #
+    # --- [3] define geometries                     --- #
+    # ------------------------------------------------- #
+    inpFile = "dat/magnet.conf"
     import nkGmshRoutines.geometrize__fromTable as gft
     parts   = {}
     parts   = gft.geometrize__fromTable( dimtags=parts, inpFile=inpFile )
