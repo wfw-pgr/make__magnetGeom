@@ -41,7 +41,7 @@ def make__magnet( dimtags={} ):
     # ------------------------------------------------- #
     # --- [3] define geometries                     --- #
     # ------------------------------------------------- #
-    inpFile = "dat/magnet.conf"
+    inpFile = "dat/magnet_divide.conf"
     import nkGmshRoutines.geometrize__fromTable as gft
     parts   = {}
     parts   = gft.geometrize__fromTable( dimtags=parts, inpFile=inpFile )
