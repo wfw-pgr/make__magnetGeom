@@ -37,30 +37,25 @@ if ( __name__=="__main__" ):
     # ------------------------------------------------- #
     # --- [2] Modeling                              --- #
     # ------------------------------------------------- #
-
     dimtags = make__magnet()
-    print( dimtags )
     
     gmsh.model.occ.synchronize()
     gmsh.model.occ.removeAllDuplicates()
     gmsh.model.occ.synchronize()
 
-
     # ------------------------------------------------- #
     # --- [3] Mesh settings                         --- #
     # ------------------------------------------------- #
-
-    uniform_mesh = False
-    
-    if ( uniform_mesh ):
-        gmsh.option.setNumber( "Mesh.CharacteristicLengthMin", 0.050 )
-        gmsh.option.setNumber( "Mesh.CharacteristicLengthMax", 0.050 )
-    else:
-        meshFile = "dat/mesh.conf"
-        physFile = "dat/phys.conf"
+    mesh_from_config = True                #   from nkGMshRoutines/test/mesh.conf, phys.conf
+    if ( mesh_from_config ):
+        meshFile = "dat/magnet_mesh.conf"
+        physFile = "dat/magnet_phys.conf"
         import nkGmshRoutines.assign__meshsize as ams
-        meshes   = ams.assign__meshsize( dimtags=dimtags, meshFile=meshFile, physFile=physFile )
-    
+        meshes = ams.assign__meshsize( meshFile=meshFile, physFile=physFile, dimtags=dimtags )
+    else:
+        import nkGmshRoutines.assign__meshsize as ams
+        meshes = ams.assign__meshsize( uniform=0.1, dimtags=dimtags )
+
     # ------------------------------------------------- #
     # --- [4] post process                          --- #
     # ------------------------------------------------- #
@@ -68,5 +63,3 @@ if ( __name__=="__main__" ):
     gmsh.model.mesh.generate(3)
     gmsh.write( "msh/model.msh" )
     gmsh.finalize()
-    
-
